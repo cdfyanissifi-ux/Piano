@@ -292,7 +292,7 @@ body {
 <div id="overlay">
   <div id="panel">
     <div class="panel-title" id="p-title">💕 Piano Tiles 💕</div>
-    <div class="panel-sub"  id="p-sub">Un jeu, pour toi ✨<br>Choisis une musique !</div>
+    <div class="panel-sub"  id="p-sub">Un jeu pour toi ✨<br>Choisis une musique !</div>
     <div id="p-body"></div>
   </div>
 </div>
