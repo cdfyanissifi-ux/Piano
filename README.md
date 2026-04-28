@@ -275,7 +275,7 @@
   <div id="unlock-screen">
     <div class="unlock-emoji">💕</div>
     <div class="unlock-title">Piano Tiles</div>
-    <div class="unlock-sub">Pour toi, Ibtissem ✨</div>
+    <div class="unlock-sub">TON JEU, Ibtissem ✨💗</div>
     <button class="unlock-btn" id="unlock-btn">▶ JOUER</button>
   </div>
 
@@ -291,7 +291,7 @@
   <div id="overlay" class="hidden">
     <div id="panel">
       <div class="panel-title" id="p-title">💕 Piano Tiles 💕</div>
-      <div class="panel-sub"  id="p-sub">Pour toi, Ibtissem ✨<br>Choisis une musique !</div>
+      <div class="panel-sub"  id="p-sub">uN jEu, our toi ✨<br>Choisis une musique !</div>
       <div id="p-body"></div>
     </div>
   </div>
@@ -322,32 +322,56 @@ const SONGS_CONFIG = [
 ];
 // ══════════════════════════════════════════════════════
 
-// ── Audio — créé uniquement après geste (règle iOS Safari) ──
+// ══════════════════════════════════════════════════════
+//  AUDIO — Double stratégie iPhone/Safari
+//  • HTMLAudioElement pour la lecture (100% compatible iOS)
+//  • WebAudioContext uniquement pour la beat detection
+// ══════════════════════════════════════════════════════
 let AC = null;
 function getAC() {
   if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
   return AC;
 }
 
-// Bouton démarrage → déblocage audio iOS
+// Déblocage audio iOS : on crée un AudioContext + on joue un son
+// OBLIGATOIREMENT dans le handler synchrone du touchend
 const unlockBtn = document.getElementById('unlock-btn');
+let audioUnlocked = false;
 
 function doUnlock(e) {
   e.preventDefault();
   e.stopPropagation();
+
+  // 1. Créer l'AudioContext dans le geste (synchrone)
   const ctx = getAC();
-  // Son silencieux pour débloquer WebAudio sur Safari
-  const buf = ctx.createBuffer(1, 1, 22050);
-  const src = ctx.createBufferSource();
-  src.buffer = buf; src.connect(ctx.destination); src.start(0);
-  ctx.resume().then(() => {
+
+  // 2. Jouer un buffer silencieux — débloque Safari
+  try {
+    const buf = ctx.createBuffer(1, 1, 22050);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    src.start(0);
+  } catch(err) {}
+
+  // 3. Resume (au cas où suspendu)
+  const doStart = () => {
+    audioUnlocked = true;
     document.getElementById('unlock-screen').classList.add('hidden');
     preloadAll();
-  });
+  };
+
+  if (ctx.state === 'suspended') {
+    ctx.resume().then(doStart).catch(doStart);
+  } else {
+    doStart();
+  }
 }
 
+// iOS : touchend déclenche le déblocage audio de façon synchrone
 unlockBtn.addEventListener('touchend', doUnlock, { passive: false });
-unlockBtn.addEventListener('click',    doUnlock);
+// PC : click normal
+unlockBtn.addEventListener('click', doUnlock);
 
 // ── Beat Detection ──
 async function detectBeats(buffer) {
@@ -397,14 +421,27 @@ async function preloadAll() {
   for (const cfg of SONGS_CONFIG) {
     try {
       updAn(`Chargement : ${cfg.title}`, done/total*60);
+
+      // Fetch pour beat detection (WebAudio)
       const res = await fetch(cfg.file);
       if (!res.ok) throw new Error('Fichier introuvable : ' + cfg.file);
       const ab  = await res.arrayBuffer();
+
       updAn(`Analyse : ${cfg.title}`, done/total*60+30/total);
-      const buf = await getAC().decodeAudioData(ab);
+
+      // Décoder pour analyse beats uniquement
+      const buf = await getAC().decodeAudioData(ab.slice(0)); // slice = copie
       const r   = await detectBeats(buf);
-      loadedSongs.push({config:cfg, buffer:buf, ...r});
-    } catch(err) { console.warn('Erreur chanson:', cfg.file, err.message); }
+
+      // HTMLAudio pour la lecture — 100% compatible iOS/Safari
+      const audioEl = new Audio(cfg.file);
+      audioEl.preload = 'auto';
+      audioEl.load();
+
+      loadedSongs.push({ config: cfg, audioEl, beats: r.beats, bpm: r.bpm, duration: r.duration });
+    } catch(err) {
+      console.warn('Erreur chanson:', cfg.file, err.message);
+    }
     done++; updAn(`${done}/${total} musique(s)`, done/total*100);
   }
   hideAnalyzing(); renderMenu();
@@ -472,7 +509,10 @@ function loop(ts){
   if(!G.running) return;
   const dt=Math.min(ts-lastTs,50); lastTs=ts;
   resGC(); gx.clearRect(0,0,gc.width,gc.height);
-  const elapsed=getAC().currentTime-G.startT;
+
+  // Utilise HTMLAudio.currentTime pour la sync — fonctionne sur iPhone
+  const elapsed = G.src ? G.src.currentTime : 0;
+
   const pps=(3+G.speedMult*2.5)*60;
   const travel=(gc.height*HR)/pps;
   for(let i=G.beatIdx;i<G.song.beats.length;i++){
@@ -530,28 +570,56 @@ function hitCol(col){
 }
 
 function startGame(idx){
-  if(G.src){try{G.src.stop();}catch(e){} G.src=null;}
-  const ctx=getAC(); if(ctx.state==='suspended') ctx.resume();
-  const song=loadedSongs[idx];
-  Object.assign(G,{song,tiles:[],score:0,combo:0,speedMult:1,beatIdx:0,lastSpawn:-1,running:true});
-  parts.length=0;
-  document.getElementById('score-val').textContent='0';
-  document.getElementById('combo-val').textContent='Combo: 0x';
-  document.getElementById('speed-val').textContent='♩ ×1.0';
-  document.getElementById('song-name').textContent=song.config.title+'  ·  '+song.config.artist;
-  document.getElementById('prog-bar').style.width='0%';
+  // Arrêter l'audio précédent
+  if(G.src){
+    try { G.src.pause(); G.src.currentTime=0; } catch(e){}
+    G.src = null;
+  }
+
+  // Résume AudioContext si suspendu (iOS)
+  const ctx = getAC();
+  if(ctx.state === 'suspended') ctx.resume();
+
+  const song = loadedSongs[idx];
+  Object.assign(G, {song, tiles:[], score:0, combo:0, speedMult:1, beatIdx:0, lastSpawn:-1, running:true});
+  parts.length = 0;
+
+  document.getElementById('score-val').textContent  = '0';
+  document.getElementById('combo-val').textContent  = 'Combo: 0x';
+  document.getElementById('speed-val').textContent  = '♩ ×1.0';
+  document.getElementById('song-name').textContent  = song.config.title + '  ·  ' + song.config.artist;
+  document.getElementById('prog-bar').style.width   = '0%';
   hideOverlay();
-  const src=ctx.createBufferSource();
-  src.buffer=song.buffer; src.connect(ctx.destination); src.start(0);
-  G.src=src; G.startT=ctx.currentTime;
-  src.onended=()=>{ if(G.running) setTimeout(()=>{ if(G.running) endGame(true); },2000); };
+
+  // Lecture via HTMLAudioElement — compatible iPhone Safari
+  const audio = song.audioEl;
+  audio.currentTime = 0;
+  audio.volume = 1;
+
+  // On note l'heure de début via AudioContext pour la sync beats
+  const playPromise = audio.play();
+  G.src    = audio;
+  G.startT = ctx.currentTime; // référence temps AudioContext
+
+  if(playPromise !== undefined){
+    playPromise.catch(err => {
+      console.warn('Audio play failed:', err);
+      // Retry après interaction
+    });
+  }
+
+  audio.onended = () => {
+    if(G.running) setTimeout(()=>{ if(G.running) endGame(true); }, 2000);
+  };
+
   if(G.raf) cancelAnimationFrame(G.raf);
-  lastTs=performance.now(); G.raf=requestAnimationFrame(loop);
+  lastTs = performance.now();
+  G.raf = requestAnimationFrame(loop);
 }
 
 function endGame(win){
   G.running=false; if(G.raf) cancelAnimationFrame(G.raf);
-  if(G.src){try{G.src.stop();}catch(e){} G.src=null;}
+  if(G.src){ try{ G.src.pause(); G.src.currentTime=0; }catch(e){} G.src=null; }
   const name=G.song?G.song.config.title:'—';
   const idx=loadedSongs.indexOf(G.song);
   const body=win
