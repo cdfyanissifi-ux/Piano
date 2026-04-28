@@ -9,301 +9,300 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
 
-:root {
-  --rose:   #c0006e;
-  --rose2:  #ff1493;
-  --rouge:  #8b0000;
-  --dark:   #07000e;
-  --dark2:  #0a0008;
-  --light:  #ffe0f0;
-  --soft:   #ffb3d9;
-  --pink:   #ff9ec8;
-  --glow:   rgba(192,0,110,0.55);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
+/* ═══════════════════════════════════════════════════════
+   RESET TOTAL — isole le jeu du CSS du site parent
+   Tout est scopé sous #pt-root
+   ═══════════════════════════════════════════════════════ */
+#pt-root, #pt-root *, #pt-root *::before, #pt-root *::after {
+  all: initial;
+  box-sizing: border-box !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
 }
 
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-
-html {
-  height: 100%;
-  height: -webkit-fill-available;
+#pt-root {
+  display: block !important;
+  position: fixed !important;
+  top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+  width: 100% !important; height: 100% !important;
+  background: #07000e !important;
+  z-index: 999999 !important;
+  overflow: hidden !important;
+  touch-action: none !important;
+  font-family: 'Lato', sans-serif !important;
 }
 
-body {
-  height: 100vh;
-  height: -webkit-fill-available;
-  overflow: hidden;
-  background: var(--dark);
-  font-family: 'Lato', sans-serif;
-  user-select: none;
-  touch-action: none;
-  overscroll-behavior: none;
+/* BG canvas */
+#pt-root #bg-canvas {
+  display: block !important;
+  position: fixed !important;
+  top: 0 !important; left: 0 !important;
+  width: 100% !important; height: 100% !important;
+  z-index: 0 !important; pointer-events: none !important;
 }
 
-/* ── BG ── */
-#bg-canvas {
-  position: fixed; inset: 0;
-  width: 100%; height: 100%;
-  z-index: 0; pointer-events: none;
+/* APP layout */
+#pt-root #app {
+  display: flex !important; flex-direction: column !important;
+  position: relative !important; z-index: 1 !important;
+  width: 100% !important; height: 100% !important;
+  max-width: 560px !important; margin: 0 auto !important;
 }
 
-/* ── APP ── */
-#app {
-  position: relative; z-index: 1;
-  display: flex; flex-direction: column;
-  height: 100vh;
-  height: -webkit-fill-available;
-  max-width: 560px;
-  margin: 0 auto;
+/* HEADER */
+#pt-root #header {
+  display: flex !important; align-items: center !important;
+  justify-content: space-between !important;
+  flex-shrink: 0 !important;
+  background: linear-gradient(135deg, #8b0000, #c0006e) !important;
+  padding: max(10px, env(safe-area-inset-top, 10px)) 18px 10px 18px !important;
+  box-shadow: 0 2px 22px rgba(192,0,110,0.55) !important;
+}
+#pt-root #header h1 {
+  display: block !important;
+  color: #ffe0f0 !important;
+  font-family: 'Playfair Display', serif !important;
+  font-size: clamp(14px, 4vw, 18px) !important;
+  font-weight: 700 !important; letter-spacing: 2px !important;
+  text-shadow: 0 0 14px #ff69b4 !important;
+  margin: 0 !important; padding: 0 !important;
+  background: none !important; border: none !important;
+  border-bottom: none !important; text-decoration: none !important;
+  line-height: 1.2 !important;
+}
+#pt-root #score-val {
+  display: block !important; color: #ffb3d9 !important;
+  font-size: clamp(20px, 5vw, 26px) !important; font-weight: 700 !important;
+  text-shadow: 0 0 10px #ff1493 !important; line-height: 1 !important;
+  min-width: 55px !important; text-align: right !important;
 }
 
-/* ── HEADER ── */
-#header {
-  flex-shrink: 0;
-  background: linear-gradient(135deg, var(--rouge), var(--rose));
-  padding: 10px 18px;
-  padding-top: max(10px, env(safe-area-inset-top));
-  display: flex; align-items: center; justify-content: space-between;
-  box-shadow: 0 2px 22px var(--glow);
+/* SONG BAR */
+#pt-root #song-bar {
+  display: flex !important; align-items: center !important; flex-shrink: 0 !important;
+  background: rgba(90,0,36,0.85) !important; padding: 5px 16px !important;
+  gap: 8px !important; border-bottom: 1px solid rgba(192,0,110,0.35) !important;
 }
-#header h1 {
-  color: var(--light);
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(14px, 4vw, 18px);
-  letter-spacing: 2px;
-  text-shadow: 0 0 14px #ff69b4;
+#pt-root #song-name { display:block !important; color:#ff9ec8 !important; font-size:12px !important; font-style:italic !important; flex:1 !important; overflow:hidden !important; white-space:nowrap !important; text-overflow:ellipsis !important; }
+#pt-root #combo-val { display:block !important; color:#ffb3e6 !important; font-size:12px !important; white-space:nowrap !important; }
+#pt-root #speed-val { display:block !important; color:rgba(255,179,217,.55) !important; font-size:11px !important; white-space:nowrap !important; }
+
+/* PROGRESS */
+#pt-root #prog-wrap { display:block !important; flex-shrink:0 !important; height:4px !important; background:rgba(255,255,255,.07) !important; }
+#pt-root #prog-bar  { display:block !important; height:100% !important; width:0% !important; background:linear-gradient(90deg,#ff1493,#ff69b4,#ffb3d9) !important; box-shadow:0 0 8px #ff1493 !important; transition:width .08s linear !important; }
+
+/* GAME AREA */
+#pt-root #game-area {
+  display:block !important; flex:1 !important; position:relative !important;
+  overflow:hidden !important; min-height:0 !important;
+  background:linear-gradient(180deg,#060010 0%,#0a0008 100%) !important;
 }
-#score-val {
-  color: var(--soft); font-size: clamp(20px, 5vw, 26px); font-weight: 700;
-  text-shadow: 0 0 10px var(--rose2); line-height: 1;
-  min-width: 55px; text-align: right;
+#pt-root #game-canvas { display:block !important; position:absolute !important; top:0 !important; left:0 !important; width:100% !important; height:100% !important; }
+
+/* KEYS */
+#pt-root #keys {
+  display:flex !important; flex-shrink:0 !important;
+  height: clamp(80px, 16vw, 110px) !important;
+  padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+  background:linear-gradient(180deg,#0f0015,#180022) !important;
+  border-top:2px solid #c0006e !important;
+}
+#pt-root .key {
+  display:flex !important; flex:1 !important;
+  align-items:flex-end !important; justify-content:center !important;
+  padding-bottom:12px !important;
+  border-right:1px solid rgba(192,0,110,0.18) !important;
+  cursor:pointer !important; position:relative !important;
+  transition: background .04s !important;
+  -webkit-user-select:none !important; user-select:none !important;
+}
+#pt-root .key:last-child { border-right:none !important; }
+#pt-root .key.pressed {
+  background:linear-gradient(180deg,rgba(192,0,110,0.92),rgba(139,0,0,0.7)) !important;
+  box-shadow:inset 0 0 30px rgba(255,20,147,0.5),0 0 28px rgba(255,20,147,0.35) !important;
+}
+#pt-root .key-lbl { display:block !important; color:rgba(255,180,220,0.35) !important; font-size:clamp(9px,2.5vw,12px) !important; letter-spacing:1px !important; }
+
+/* FLASH / PERFECT */
+#pt-root #miss-flash {
+  display:block !important; position:fixed !important; top:0 !important; left:0 !important; right:0 !important; bottom:0 !important;
+  background:rgba(192,0,110,0.18) !important; z-index:1000050 !important;
+  pointer-events:none !important; opacity:0 !important;
+}
+#pt-root #perfect-txt {
+  display:block !important; position:fixed !important; top:42% !important; left:50% !important;
+  transform:translate(-50%,-50%) !important;
+  color:#ff9ec8 !important; font-family:'Playfair Display',serif !important;
+  font-size:clamp(22px,6vw,30px) !important; font-style:italic !important;
+  z-index:1000060 !important; pointer-events:none !important;
+  opacity:0 !important; white-space:nowrap !important;
+  text-shadow:0 0 22px #ff1493 !important;
 }
 
-/* ── SONG BAR ── */
-#song-bar {
-  flex-shrink: 0;
-  background: rgba(90,0,36,0.85);
-  padding: 5px 16px;
-  display: flex; align-items: center; gap: 8px;
-  border-bottom: 1px solid rgba(192,0,110,0.35);
+/* OVERLAY */
+#pt-root #overlay {
+  display:flex !important; position:fixed !important; top:0 !important; left:0 !important; right:0 !important; bottom:0 !important;
+  background:rgba(6,0,12,0.96) !important; z-index:1000200 !important;
+  align-items:center !important; justify-content:center !important;
+  padding:max(16px,env(safe-area-inset-top,16px)) 16px max(16px,env(safe-area-inset-bottom,16px)) 16px !important;
 }
-#song-name { color: var(--pink); font-size: 12px; font-style: italic; flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-#combo-val { color: #ffb3e6; font-size: 12px; white-space: nowrap; }
-#speed-val  { color: rgba(255,179,217,0.55); font-size: 11px; white-space: nowrap; }
-
-/* ── PROGRESS ── */
-#prog-wrap { flex-shrink: 0; height: 4px; background: rgba(255,255,255,0.07); }
-#prog-bar  {
-  height: 100%; width: 0%;
-  background: linear-gradient(90deg, var(--rose2), #ff69b4, var(--soft));
-  box-shadow: 0 0 8px var(--rose2);
-  transition: width .08s linear;
+#pt-root #overlay.hidden { display:none !important; }
+#pt-root #panel {
+  display:block !important;
+  background:linear-gradient(140deg,rgba(139,0,0,0.92),rgba(70,0,55,0.92)) !important;
+  border:1px solid #c0006e !important; border-radius:20px !important;
+  padding:clamp(20px,5vw,32px) clamp(18px,6vw,36px) !important;
+  max-width:420px !important; width:100% !important;
+  box-shadow:0 0 60px rgba(192,0,110,0.3) !important;
+  text-align:center !important; max-height:86vh !important;
+  overflow-y:auto !important; -webkit-overflow-scrolling:touch !important;
 }
-
-/* ── GAME AREA ── */
-#game-area {
-  flex: 1; position: relative; overflow: hidden; min-height: 0;
-  background: linear-gradient(180deg, #060010 0%, var(--dark2) 100%);
+#pt-root .panel-title {
+  display:block !important; color:#ff9ec8 !important;
+  font-family:'Playfair Display',serif !important; font-size:clamp(20px,6vw,26px) !important;
+  font-weight:700 !important; text-shadow:0 0 16px #ff1493 !important; margin-bottom:6px !important;
 }
-#game-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-
-/* ── KEYS ── */
-#keys {
-  flex-shrink: 0; height: clamp(72px, 14vw, 100px);
-  padding-bottom: max(0px, var(--safe-bottom));
-  background: linear-gradient(180deg, #0f0015, #180022);
-  border-top: 2px solid var(--rose);
-  display: flex;
-}
-.key {
-  flex: 1;
-  border-right: 1px solid rgba(192,0,110,0.18);
-  cursor: pointer;
-  transition: background .04s;
-  display: flex; align-items: flex-end; justify-content: center;
-  padding-bottom: 10px; position: relative;
-}
-.key:last-child { border-right: none; }
-.key.pressed {
-  background: linear-gradient(180deg, rgba(192,0,110,0.92), rgba(139,0,0,0.7));
-  box-shadow: inset 0 0 30px rgba(255,20,147,0.5), 0 0 28px rgba(255,20,147,0.35);
-}
-.key-lbl { color: rgba(255,180,220,0.35); font-size: clamp(9px, 2.5vw, 12px); letter-spacing: 1px; }
-
-/* ── FLASH / PERFECT ── */
-#miss-flash {
-  position: fixed; inset: 0;
-  background: rgba(192,0,110,0.18);
-  z-index: 50; pointer-events: none; opacity: 0;
-}
-#perfect-txt {
-  position: fixed; top: 42%; left: 50%;
-  transform: translate(-50%,-50%);
-  color: var(--pink);
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(22px, 6vw, 30px); font-style: italic;
-  z-index: 60; pointer-events: none; opacity: 0; white-space: nowrap;
-  text-shadow: 0 0 22px var(--rose2);
+#pt-root .panel-sub {
+  display:block !important; color:#ffb3e6 !important;
+  font-size:13px !important; line-height:1.7 !important;
+  font-style:italic !important; margin-bottom:20px !important;
 }
 
-/* ── OVERLAY ── */
-#overlay {
-  position: fixed; inset: 0;
-  background: rgba(6,0,12,0.96);
-  z-index: 200;
-  display: flex; align-items: center; justify-content: center;
-  padding: 16px;
-  padding-top: max(16px, env(safe-area-inset-top));
-  padding-bottom: max(16px, env(safe-area-inset-bottom));
+/* SONG ITEMS */
+#pt-root .song-item {
+  display:flex !important; align-items:center !important;
+  background:linear-gradient(135deg,rgba(107,0,37,0.85),rgba(50,0,50,0.85)) !important;
+  border:1px solid rgba(192,0,110,0.35) !important; border-radius:12px !important;
+  padding:clamp(10px,3vw,14px) !important; margin-bottom:10px !important;
+  cursor:pointer !important; gap:12px !important; text-align:left !important;
+  transition:all .2s !important;
 }
-#overlay.hidden { display: none; }
+#pt-root .song-item:active {
+  border-color:#ff69b4 !important;
+  background:linear-gradient(135deg,rgba(160,0,58,0.92),rgba(80,0,80,0.92)) !important;
+  box-shadow:0 0 16px rgba(192,0,110,0.4) !important;
+}
+#pt-root .song-icon   { display:block !important; font-size:clamp(22px,6vw,28px) !important; flex-shrink:0 !important; }
+#pt-root .song-info   { display:block !important; flex:1 !important; overflow:hidden !important; }
+#pt-root .song-title  { display:block !important; color:#ffe0f0 !important; font-family:'Playfair Display',serif !important; font-size:clamp(13px,3.5vw,15px) !important; overflow:hidden !important; white-space:nowrap !important; text-overflow:ellipsis !important; }
+#pt-root .song-artist { display:block !important; color:#ff9ec8 !important; font-size:clamp(10px,2.5vw,12px) !important; margin-top:2px !important; }
+#pt-root .song-bpm    { display:block !important; color:rgba(255,179,217,.5) !important; font-size:11px !important; margin-top:1px !important; }
 
-#panel {
-  background: linear-gradient(140deg, rgba(139,0,0,0.92), rgba(70,0,55,0.92));
-  border: 1px solid var(--rose);
-  border-radius: 20px;
-  padding: clamp(20px, 5vw, 32px) clamp(18px, 6vw, 36px);
-  max-width: 420px; width: 100%;
-  box-shadow: 0 0 60px rgba(192,0,110,0.3);
-  text-align: center;
-  max-height: 86vh;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+/* ANALYZING */
+#pt-root #analyzing {
+  display:flex !important; position:fixed !important; top:0 !important; left:0 !important; right:0 !important; bottom:0 !important;
+  background:rgba(6,0,12,0.93) !important; z-index:1000300 !important;
+  flex-direction:column !important; align-items:center !important; justify-content:center !important; gap:16px !important;
 }
-#panel::-webkit-scrollbar { width: 3px; }
-#panel::-webkit-scrollbar-thumb { background: var(--rose); border-radius: 2px; }
+#pt-root #analyzing.hidden { display:none !important; }
+#pt-root .pulse-heart { display:block !important; font-size:56px !important; animation:pt-hb .65s ease-in-out infinite alternate !important; }
+@keyframes pt-hb { from{transform:scale(1)} to{transform:scale(1.28)} }
+#pt-root .an-title { display:block !important; color:#ff9ec8 !important; font-family:'Playfair Display',serif !important; font-size:20px !important; font-style:italic !important; text-shadow:0 0 14px #ff1493 !important; }
+#pt-root .an-sub   { display:block !important; color:rgba(255,179,217,.55) !important; font-size:13px !important; }
+#pt-root .load-wrap { display:block !important; width:220px !important; height:6px !important; background:rgba(255,255,255,.08) !important; border-radius:3px !important; overflow:hidden !important; }
+#pt-root .load-bar  { display:block !important; height:100% !important; background:linear-gradient(90deg,#ff1493,#ff69b4) !important; border-radius:3px !important; transition:width .2s !important; }
 
-.panel-title {
-  color: var(--pink);
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(20px, 6vw, 26px);
-  text-shadow: 0 0 16px var(--rose2);
-  margin-bottom: 6px;
-}
-.panel-sub {
-  color: #ffb3e6; font-size: 13px; line-height: 1.7;
-  font-style: italic; margin-bottom: 20px;
-}
+/* FINAL */
+#pt-root #final-score { display:block !important; color:#ffe0f0 !important; font-size:clamp(38px,10vw,50px) !important; font-family:'Playfair Display',serif !important; text-shadow:0 0 18px #ff1493 !important; margin:12px 0 !important; }
+#pt-root #final-label { display:block !important; color:#ffb3e6 !important; font-size:13px !important; font-style:italic !important; }
 
-/* ── SONG ITEMS ── */
-.song-item {
-  display: flex; align-items: center;
-  background: linear-gradient(135deg, rgba(107,0,37,0.85), rgba(50,0,50,0.85));
-  border: 1px solid rgba(192,0,110,0.35);
-  border-radius: 12px;
-  padding: clamp(10px, 3vw, 14px) clamp(10px, 3vw, 14px);
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: all .2s; gap: 12px; text-align: left;
-  -webkit-tap-highlight-color: transparent;
+/* BUTTONS */
+#pt-root .btn {
+  display:inline-block !important;
+  background:linear-gradient(135deg,#c0006e,#8b0000) !important;
+  color:#fff0f8 !important; border:none !important; border-radius:10px !important;
+  padding:clamp(10px,3vw,13px) clamp(20px,5vw,28px) !important;
+  font-size:clamp(13px,3.5vw,15px) !important; cursor:pointer !important;
+  margin:5px !important; font-family:'Playfair Display',serif !important;
+  letter-spacing:1px !important; box-shadow:0 4px 16px rgba(192,0,110,0.3) !important;
+  transition:transform .15s,box-shadow .15s !important;
 }
-.song-item:hover, .song-item:active {
-  border-color: #ff69b4;
-  background: linear-gradient(135deg, rgba(160,0,58,0.92), rgba(80,0,80,0.92));
-  transform: translateX(3px);
-  box-shadow: 0 0 16px rgba(192,0,110,0.4);
-}
-.song-icon { font-size: clamp(22px, 6vw, 28px); flex-shrink: 0; }
-.song-info { flex: 1; overflow: hidden; }
-.song-title {
-  color: var(--light); font-family: 'Playfair Display', serif;
-  font-size: clamp(13px, 3.5vw, 15px);
-  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-}
-.song-artist { color: var(--pink); font-size: clamp(10px, 2.5vw, 12px); margin-top: 2px; }
-.song-bpm    { color: rgba(255,179,217,0.5); font-size: 11px; margin-top: 1px; }
+#pt-root .btn:active { transform:scale(1.06) !important; box-shadow:0 0 22px rgba(192,0,110,0.6) !important; }
 
-/* ── ANALYZING ── */
-#analyzing {
-  position: fixed; inset: 0;
-  background: rgba(6,0,12,0.93);
-  z-index: 300;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 16px;
+/* UNLOCK SCREEN */
+#pt-root #unlock-screen {
+  display:flex !important; position:fixed !important; top:0 !important; left:0 !important; right:0 !important; bottom:0 !important;
+  background:#07000e !important; z-index:1000400 !important;
+  flex-direction:column !important; align-items:center !important; justify-content:center !important; gap:20px !important;
 }
-#analyzing.hidden { display: none; }
-.pulse-heart { font-size: 56px; animation: hb .65s ease-in-out infinite alternate; }
-@keyframes hb { from{transform:scale(1)} to{transform:scale(1.28)} }
-.an-title { color: var(--pink); font-family:'Playfair Display',serif; font-size:20px; font-style:italic; text-shadow:0 0 14px var(--rose2); }
-.an-sub    { color: rgba(255,179,217,0.55); font-size:13px; }
-
-/* ── END SCREEN ── */
-#final-score { color: var(--light); font-size: clamp(38px,10vw,50px); font-family:'Playfair Display',serif; text-shadow:0 0 18px var(--rose2); margin:12px 0; }
-#final-label { color:#ffb3e6; font-size:13px; font-style:italic; }
-
-/* ── BUTTONS ── */
-.btn {
-  background: linear-gradient(135deg, var(--rose), var(--rouge));
-  color: #fff0f8; border: none; border-radius: 10px;
-  padding: clamp(10px,3vw,13px) clamp(20px,5vw,28px);
-  font-size: clamp(13px,3.5vw,15px); cursor: pointer;
-  margin: 5px; transition: all .2s;
-  font-family: 'Playfair Display', serif; letter-spacing: 1px;
-  box-shadow: 0 4px 16px rgba(192,0,110,0.3);
-  -webkit-tap-highlight-color: transparent;
+#pt-root #unlock-screen.hidden { display:none !important; }
+#pt-root .unlock-emoji  { display:block !important; font-size:64px !important; animation:pt-hb .65s ease-in-out infinite alternate !important; }
+#pt-root .unlock-title  { display:block !important; color:#ff9ec8 !important; font-family:'Playfair Display',serif !important; font-size:26px !important; font-style:italic !important; text-shadow:0 0 14px #ff1493 !important; text-align:center !important; }
+#pt-root .unlock-sub    { display:block !important; color:rgba(255,179,217,.6) !important; font-size:13px !important; text-align:center !important; }
+#pt-root .unlock-btn {
+  display:block !important;
+  background:linear-gradient(135deg,#c0006e,#8b0000) !important;
+  color:#fff0f8 !important; border:none !important; border-radius:16px !important;
+  padding:18px 48px !important; font-size:20px !important; cursor:pointer !important;
+  font-family:'Playfair Display',serif !important; letter-spacing:2px !important;
+  box-shadow:0 0 30px rgba(192,0,110,0.5) !important;
+  animation:pt-pulse 1.2s ease-in-out infinite alternate !important;
 }
-.btn:hover, .btn:active { transform: scale(1.05); box-shadow: 0 0 22px rgba(192,0,110,0.6); }
-
-/* ── LOADING BAR ── */
-.load-wrap { width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; margin-top: 10px; }
-.load-bar  { height: 100%; background: linear-gradient(90deg, var(--rose2), #ff69b4); border-radius: 3px; transition: width .2s; }
+@keyframes pt-pulse { from{box-shadow:0 0 20px rgba(192,0,110,0.4)} to{box-shadow:0 0 45px rgba(255,20,147,0.75)} }
 </style>
 </head>
 <body>
+<div id="pt-root">
 
-<canvas id="bg-canvas"></canvas>
+  <canvas id="bg-canvas"></canvas>
 
-<div id="app">
-  <div id="header">
-    <h1>💕 Piano Tiles 💕</h1>
-    <div id="score-val">0</div>
+  <div id="app">
+    <div id="header">
+      <h1>💕 Piano Tiles 💕</h1>
+      <div id="score-val">0</div>
+    </div>
+    <div id="song-bar">
+      <div id="song-name">Choisis une musique...</div>
+      <div id="combo-val">Combo: 0x</div>
+      <div id="speed-val">♩ ×1.0</div>
+    </div>
+    <div id="prog-wrap"><div id="prog-bar"></div></div>
+    <div id="game-area">
+      <canvas id="game-canvas"></canvas>
+    </div>
+    <div id="keys">
+      <div class="key" data-col="0"><span class="key-lbl">A</span></div>
+      <div class="key" data-col="1"><span class="key-lbl">S</span></div>
+      <div class="key" data-col="2"><span class="key-lbl">D</span></div>
+      <div class="key" data-col="3"><span class="key-lbl">F</span></div>
+    </div>
   </div>
-  <div id="song-bar">
-    <div id="song-name">Choisis une musique...</div>
-    <div id="combo-val">Combo: 0x</div>
-    <div id="speed-val">♩ ×1.0</div>
-  </div>
-  <div id="prog-wrap"><div id="prog-bar"></div></div>
-  <div id="game-area">
-    <canvas id="game-canvas"></canvas>
-  </div>
-  <div id="keys">
-    <div class="key" data-col="0"><span class="key-lbl">A</span></div>
-    <div class="key" data-col="1"><span class="key-lbl">S</span></div>
-    <div class="key" data-col="2"><span class="key-lbl">D</span></div>
-    <div class="key" data-col="3"><span class="key-lbl">F</span></div>
-  </div>
-</div>
 
-<div id="miss-flash"></div>
-<div id="perfect-txt">💕 PERFECT!</div>
+  <div id="miss-flash"></div>
+  <div id="perfect-txt">💕 PERFECT!</div>
 
-<!-- Analyzing -->
-<div id="analyzing" class="hidden">
-  <div class="pulse-heart">💗</div>
-  <div class="an-title">Chargement...</div>
-  <div class="an-sub" id="an-sub">Analyse du rythme en cours</div>
-  <div class="load-wrap" style="max-width:220px">
-    <div class="load-bar" id="an-bar" style="width:0%"></div>
+  <!-- Écran de démarrage — déblocage audio iOS obligatoire -->
+  <div id="unlock-screen">
+    <div class="unlock-emoji">💕</div>
+    <div class="unlock-title">Piano Tiles</div>
+    <div class="unlock-sub">Pour toi, Ibtissem ✨</div>
+    <button class="unlock-btn" id="unlock-btn">▶ JOUER</button>
   </div>
-</div>
 
-<!-- Overlay -->
-<div id="overlay">
-  <div id="panel">
-    <div class="panel-title" id="p-title">💕 Piano Tiles 💕</div>
-    <div class="panel-sub"  id="p-sub">Un jeu pour toi ✨<br>Choisis une musique !</div>
-    <div id="p-body"></div>
+  <!-- Chargement -->
+  <div id="analyzing" class="hidden">
+    <div class="pulse-heart">💗</div>
+    <div class="an-title">Chargement...</div>
+    <div class="an-sub" id="an-sub">Analyse du rythme</div>
+    <div class="load-wrap"><div class="load-bar" id="an-bar" style="width:0%"></div></div>
   </div>
+
+  <!-- Menu / Résultats -->
+  <div id="overlay" class="hidden">
+    <div id="panel">
+      <div class="panel-title" id="p-title">💕 Piano Tiles 💕</div>
+      <div class="panel-sub"  id="p-sub">Pour toi, Ibtissem ✨<br>Choisis une musique !</div>
+      <div id="p-body"></div>
+    </div>
+  </div>
+
 </div>
 
 <script>
 'use strict';
 
 // ══════════════════════════════════════════════════════
-//  🎵 CONFIGURATION DES CHANSONS
-//  → Ajoute tes MP3 dans le dossier /music/
-//  → Remplis la liste ci-dessous
+//  🎵 CONFIGURATION — ajoute tes chansons ici
 // ══════════════════════════════════════════════════════
 const SONGS_CONFIG = [
   {
@@ -318,474 +317,366 @@ const SONGS_CONFIG = [
     artist: 'Bessan Ismail',
     emoji:  '💕',
   },
-  // ← Ajoute autant de chansons que tu veux ici
+  // Ajoute autant de chansons que tu veux :
   // { file: 'music/chanson3.mp3', title: '...', artist: '...', emoji: '✨' },
 ];
 // ══════════════════════════════════════════════════════
 
-// ── Audio Context ──
+// ── Audio — créé uniquement après geste (règle iOS Safari) ──
 let AC = null;
-function ac() {
+function getAC() {
   if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
   return AC;
 }
 
-// ── Beat Detection ──
-async function detectBeats(buffer) {
-  const sr   = buffer.sampleRate;
-  const data = buffer.getChannelData(0);
-  const winMs   = 10;
-  const frameSz = Math.floor(sr * winMs / 1000);
-  const numFr   = Math.floor(data.length / frameSz);
-  const energies = new Float32Array(numFr);
+// Bouton démarrage → déblocage audio iOS
+const unlockBtn = document.getElementById('unlock-btn');
 
-  for (let i = 0; i < numFr; i++) {
-    let e = 0;
-    const s = i * frameSz, end = s + frameSz;
-    for (let j = s; j < end; j++) e += data[j] * data[j];
-    energies[i] = e / frameSz;
-  }
-
-  const avgWin  = Math.floor(1500 / winMs);
-  const minGap  = Math.floor(200  / winMs);
-  const beats   = [];
-  let lastBeat  = -minGap;
-
-  for (let i = avgWin; i < numFr - avgWin; i++) {
-    let avg = 0;
-    for (let j = i - avgWin; j < i + avgWin; j++) avg += energies[j];
-    avg /= avgWin * 2;
-
-    if (energies[i] > 1.45 * avg && i - lastBeat > minGap) {
-      let peak = true;
-      for (let k = i-3; k <= i+3; k++) {
-        if (k !== i && k >= 0 && k < numFr && energies[k] >= energies[i]) { peak = false; break; }
-      }
-      if (peak) { beats.push(i * winMs / 1000); lastBeat = i; }
-    }
-  }
-
-  // BPM estimate
-  let bpm = 120;
-  if (beats.length > 4) {
-    const ibi = [];
-    for (let i = 1; i < beats.length; i++) ibi.push(beats[i] - beats[i-1]);
-    ibi.sort((a,b) => a-b);
-    const med = ibi[Math.floor(ibi.length/2)];
-    bpm = Math.round(60 / med);
-    while (bpm > 180) bpm >>= 1;
-    while (bpm < 55)  bpm <<= 1;
-  }
-
-  // Assign columns with musical patterns
-  const patterns = [
-    [0,2,1,3],[1,3,0,2],[2,0,3,1],[3,1,2,0],
-    [0,1,3,2],[2,3,0,1],[1,0,2,3],[3,2,1,0]
-  ];
-  let pi = 0, pp = 0;
-  const beatData = beats.map(t => {
-    const col = patterns[pi % patterns.length][pp % 4];
-    pp++; if (pp % 4 === 0) pi++;
-    return { time: t, col };
+function doUnlock(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  const ctx = getAC();
+  // Son silencieux pour débloquer WebAudio sur Safari
+  const buf = ctx.createBuffer(1, 1, 22050);
+  const src = ctx.createBufferSource();
+  src.buffer = buf; src.connect(ctx.destination); src.start(0);
+  ctx.resume().then(() => {
+    document.getElementById('unlock-screen').classList.add('hidden');
+    preloadAll();
   });
-
-  return { beats: beatData, bpm, duration: buffer.duration };
 }
 
-// ── Song loader ──
-const loadedSongs = []; // { config, buffer, beats, bpm, duration }
-let loadingCount  = 0;
+unlockBtn.addEventListener('touchend', doUnlock, { passive: false });
+unlockBtn.addEventListener('click',    doUnlock);
+
+// ── Beat Detection ──
+async function detectBeats(buffer) {
+  const sr = buffer.sampleRate;
+  const data = buffer.getChannelData(0);
+  const winMs = 10, frameSz = Math.floor(sr * winMs / 1000);
+  const numFr = Math.floor(data.length / frameSz);
+  const energies = new Float32Array(numFr);
+  for (let i = 0; i < numFr; i++) {
+    let e = 0; const s = i*frameSz, end = s+frameSz;
+    for (let j = s; j < end; j++) e += data[j]*data[j];
+    energies[i] = e / frameSz;
+  }
+  const avgWin = Math.floor(1500/winMs), minGap = Math.floor(200/winMs);
+  const beats = []; let lastBeat = -minGap;
+  for (let i = avgWin; i < numFr-avgWin; i++) {
+    let avg = 0;
+    for (let j = i-avgWin; j < i+avgWin; j++) avg += energies[j];
+    avg /= avgWin*2;
+    if (energies[i] > 1.45*avg && i-lastBeat > minGap) {
+      let peak = true;
+      for (let k=i-3;k<=i+3;k++) { if(k!==i&&k>=0&&k<numFr&&energies[k]>=energies[i]){peak=false;break;} }
+      if (peak) { beats.push(i*winMs/1000); lastBeat=i; }
+    }
+  }
+  let bpm = 120;
+  if (beats.length > 4) {
+    const ibi = []; for(let i=1;i<beats.length;i++) ibi.push(beats[i]-beats[i-1]);
+    ibi.sort((a,b)=>a-b);
+    bpm = Math.round(60/ibi[ibi.length>>1]);
+    while(bpm>180) bpm>>=1; while(bpm<55) bpm<<=1;
+  }
+  const patterns=[[0,2,1,3],[1,3,0,2],[2,0,3,1],[3,1,2,0],[0,1,3,2],[2,3,0,1],[1,0,2,3],[3,2,1,0]];
+  let pi=0,pp=0;
+  const beatData = beats.map(t => {
+    const col=patterns[pi%patterns.length][pp%4]; pp++; if(pp%4===0) pi++;
+    return {time:t,col};
+  });
+  return {beats:beatData, bpm, duration:buffer.duration};
+}
+
+const loadedSongs = [];
 
 async function preloadAll() {
-  showAnalyzing('Chargement des musiques...', 0);
-  const total = SONGS_CONFIG.length;
-  let done = 0;
-
+  showAnalyzing('Chargement...', 0);
+  const total = SONGS_CONFIG.length; let done = 0;
   for (const cfg of SONGS_CONFIG) {
     try {
-      updAn(`Chargement : ${cfg.title}`, done / total * 60);
+      updAn(`Chargement : ${cfg.title}`, done/total*60);
       const res = await fetch(cfg.file);
       if (!res.ok) throw new Error('Fichier introuvable : ' + cfg.file);
       const ab  = await res.arrayBuffer();
-      updAn(`Analyse : ${cfg.title}`, done / total * 60 + 30 / total);
-      const buf = await ac().decodeAudioData(ab);
-      const res2 = await detectBeats(buf);
-      loadedSongs.push({ config: cfg, buffer: buf, ...res2 });
-    } catch(e) {
-      console.warn('Erreur chanson:', cfg.file, e);
-      // Skip broken files gracefully
-    }
-    done++;
-    updAn(`${done}/${total} musique(s) chargée(s)`, done / total * 100);
+      updAn(`Analyse : ${cfg.title}`, done/total*60+30/total);
+      const buf = await getAC().decodeAudioData(ab);
+      const r   = await detectBeats(buf);
+      loadedSongs.push({config:cfg, buffer:buf, ...r});
+    } catch(err) { console.warn('Erreur chanson:', cfg.file, err.message); }
+    done++; updAn(`${done}/${total} musique(s)`, done/total*100);
   }
-
-  hideAnalyzing();
-  renderMenu();
+  hideAnalyzing(); renderMenu();
 }
 
-// ── Game state ──
-const G = {
-  song: null, tiles: [], score: 0, combo: 0,
-  speedMult: 1, beatIdx: 0, lastSpawn: -1,
-  running: false, src: null, startT: 0, raf: null,
-};
+// ── Game State ──
+const G = { song:null, tiles:[], score:0, combo:0, speedMult:1, beatIdx:0, lastSpawn:-1, running:false, src:null, startT:0, raf:null };
 
 // ── Canvas ──
 const gc = document.getElementById('game-canvas');
 const gx = gc.getContext('2d');
-const COLS = 4, TH = 120, HR = 0.80;
+const COLS=4, TH=120, HR=0.80;
+function resGC() { gc.width=gc.offsetWidth; gc.height=gc.offsetHeight; }
+resGC(); window.addEventListener('resize', resGC);
 
-function resGC() { gc.width = gc.offsetWidth; gc.height = gc.offsetHeight; }
-resGC();
-window.addEventListener('resize', () => { resGC(); });
-
-const TC = [['#c0006e','#7a0045'],['#8b0000','#5a0000'],['#c0006e','#7a0045'],['#8b0000','#5a0000']];
-const TG = ['#ff69b4','#ff5555','#ff69b4','#ff5555'];
+const TC=[['#c0006e','#7a0045'],['#8b0000','#5a0000'],['#c0006e','#7a0045'],['#8b0000','#5a0000']];
+const TG=['#ff69b4','#ff5555','#ff69b4','#ff5555'];
 
 function drawTile(t) {
-  const W = gc.width / COLS, x = t.col * W;
+  const W=gc.width/COLS, x=t.col*W;
   gx.save();
-  const g = gx.createLinearGradient(x, t.y, x, t.y + TH);
-  g.addColorStop(0, TC[t.col][0]); g.addColorStop(1, TC[t.col][1]);
-  gx.fillStyle = g;
-  gx.shadowColor = TG[t.col]; gx.shadowBlur = 16;
-  gx.beginPath(); gx.roundRect(x+3, t.y+3, W-6, TH-6, 8); gx.fill();
-  gx.shadowBlur = 0;
-  gx.strokeStyle = t.col%2===0 ? 'rgba(255,160,215,.5)' : 'rgba(255,130,130,.45)';
-  gx.lineWidth = 1.5;
-  gx.beginPath(); gx.roundRect(x+3, t.y+3, W-6, TH-6, 8); gx.stroke();
-  gx.fillStyle = 'rgba(255,255,255,.07)';
-  gx.beginPath(); gx.roundRect(x+8, t.y+8, W-16, 26, 5); gx.fill();
+  const g=gx.createLinearGradient(x,t.y,x,t.y+TH);
+  g.addColorStop(0,TC[t.col][0]); g.addColorStop(1,TC[t.col][1]);
+  gx.fillStyle=g; gx.shadowColor=TG[t.col]; gx.shadowBlur=16;
+  gx.beginPath(); gx.roundRect(x+3,t.y+3,W-6,TH-6,8); gx.fill();
+  gx.shadowBlur=0;
+  gx.strokeStyle=t.col%2===0?'rgba(255,160,215,.5)':'rgba(255,130,130,.45)'; gx.lineWidth=1.5;
+  gx.beginPath(); gx.roundRect(x+3,t.y+3,W-6,TH-6,8); gx.stroke();
+  gx.fillStyle='rgba(255,255,255,.07)';
+  gx.beginPath(); gx.roundRect(x+8,t.y+8,W-16,26,5); gx.fill();
   gx.restore();
 }
 
 function drawScene() {
-  // Lane dividers
-  for (let i=1;i<COLS;i++) {
-    const x = gc.width/COLS*i;
+  for(let i=1;i<COLS;i++){
+    const x=gc.width/COLS*i;
     gx.save(); gx.strokeStyle='rgba(192,0,110,.09)'; gx.lineWidth=1;
     gx.beginPath(); gx.moveTo(x,0); gx.lineTo(x,gc.height); gx.stroke(); gx.restore();
   }
-  // Hit line
-  const hy = gc.height * HR;
+  const hy=gc.height*HR;
   gx.save(); gx.strokeStyle='rgba(192,0,110,.4)'; gx.lineWidth=1.5;
   gx.setLineDash([10,7]); gx.beginPath(); gx.moveTo(0,hy); gx.lineTo(gc.width,hy); gx.stroke();
   gx.setLineDash([]); gx.restore();
 }
 
-// Particles
-const parts = [];
-function spawnParts(col) {
-  const W = gc.width/COLS, x = col*W+W/2, y = gc.height*HR;
-  for (let i=0;i<12;i++) {
-    const a = Math.random()*Math.PI*2, s = 2+Math.random()*5;
-    parts.push({ x, y, vx:Math.cos(a)*s, vy:Math.sin(a)*s-2.5, alpha:1, r:2+Math.random()*4, col });
+const parts=[];
+function spawnParts(col){
+  const W=gc.width/COLS, x=col*W+W/2, y=gc.height*HR;
+  for(let i=0;i<12;i++){
+    const a=Math.random()*Math.PI*2, s=2+Math.random()*5;
+    parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-2.5,alpha:1,r:2+Math.random()*4,col});
   }
 }
-function drawParts() {
-  for (let i=parts.length-1;i>=0;i--) {
+function drawParts(){
+  for(let i=parts.length-1;i>=0;i--){
     const p=parts[i]; p.x+=p.vx; p.y+=p.vy; p.vy+=0.18; p.alpha-=0.04;
-    if (p.alpha<=0) { parts.splice(i,1); continue; }
-    gx.save(); gx.globalAlpha=p.alpha;
-    gx.fillStyle=TG[p.col]; gx.shadowColor=TG[p.col]; gx.shadowBlur=8;
-    gx.beginPath(); gx.arc(p.x,p.y,p.r,0,Math.PI*2); gx.fill();
-    gx.restore();
+    if(p.alpha<=0){parts.splice(i,1);continue;}
+    gx.save(); gx.globalAlpha=p.alpha; gx.fillStyle=TG[p.col]; gx.shadowColor=TG[p.col]; gx.shadowBlur=8;
+    gx.beginPath(); gx.arc(p.x,p.y,p.r,0,Math.PI*2); gx.fill(); gx.restore();
   }
 }
 
-// ── Game loop ──
-let lastTs = 0;
-function loop(ts) {
-  if (!G.running) return;
-  const dt = Math.min(ts - lastTs, 50);
-  lastTs = ts;
-  resGC();
-  gx.clearRect(0,0,gc.width,gc.height);
-
-  const song    = G.song;
-  const elapsed = ac().currentTime - G.startT;
-  const pps     = (3 + G.speedMult * 2.5) * 60; // pixels/sec
-  const travel  = (gc.height * HR) / pps;
-
-  // Spawn tiles
-  for (let i = G.beatIdx; i < song.beats.length; i++) {
-    const b = song.beats[i];
-    if (elapsed >= b.time - travel) {
-      if (b.time > G.lastSpawn) {
-        G.tiles.push({ col: b.col, y: -TH, active: true, beatTime: b.time });
-        G.lastSpawn = b.time;
-      }
-      G.beatIdx = i + 1;
+let lastTs=0;
+function loop(ts){
+  if(!G.running) return;
+  const dt=Math.min(ts-lastTs,50); lastTs=ts;
+  resGC(); gx.clearRect(0,0,gc.width,gc.height);
+  const elapsed=getAC().currentTime-G.startT;
+  const pps=(3+G.speedMult*2.5)*60;
+  const travel=(gc.height*HR)/pps;
+  for(let i=G.beatIdx;i<G.song.beats.length;i++){
+    const b=G.song.beats[i];
+    if(elapsed>=b.time-travel){
+      if(b.time>G.lastSpawn){ G.tiles.push({col:b.col,y:-TH,active:true}); G.lastSpawn=b.time; }
+      G.beatIdx=i+1;
     } else break;
   }
-
-  // Move tiles
-  const spd = pps * dt / 1000;
-  for (const t of G.tiles) if (t.active) t.y += spd;
-
-  // Miss check (tile fell past bottom)
-  G.tiles = G.tiles.filter(t => {
-    if (!t.active) return false;
-    if (t.y > gc.height + 10) { doMiss(); return false; }
+  const spd=pps*dt/1000;
+  for(const t of G.tiles) if(t.active) t.y+=spd;
+  G.tiles=G.tiles.filter(t=>{
+    if(!t.active) return false;
+    if(t.y>gc.height+10){ doMiss(); return false; }
     return true;
   });
-  if (!G.running) return;
-
-  // Progress bar
-  document.getElementById('prog-bar').style.width = Math.min(elapsed/song.duration*100, 100) + '%';
-
-  // End of song
-  if (elapsed >= song.duration + travel + 1 && G.tiles.length === 0) { endGame(true); return; }
-
-  drawScene();
-  for (const t of G.tiles) drawTile(t);
-  drawParts();
-
-  G.raf = requestAnimationFrame(loop);
+  if(!G.running) return;
+  document.getElementById('prog-bar').style.width=Math.min(elapsed/G.song.duration*100,100)+'%';
+  if(elapsed>=G.song.duration+travel+1&&G.tiles.length===0){endGame(true);return;}
+  drawScene(); for(const t of G.tiles) drawTile(t); drawParts();
+  G.raf=requestAnimationFrame(loop);
 }
 
-function doMiss() {
-  if (!G.running) return;
-  G.combo = 0;
-  document.getElementById('combo-val').textContent = 'Combo: 0x';
-  flashMiss();
-  endGame(false);
+function doMiss(){
+  if(!G.running) return;
+  G.combo=0; document.getElementById('combo-val').textContent='Combo: 0x';
+  flashMiss(); endGame(false);
 }
 
-// ── Hit ──
-function hitCol(col) {
-  if (!G.running) return;
-  const hy = gc.height * HR;
-  let best = null, bestD = 9999;
-  for (const t of G.tiles) {
-    if (t.col === col && t.active) {
-      const d = Math.abs((t.y + TH/2) - hy);
-      if (d < TH * 0.78 && d < bestD) { best = t; bestD = d; }
+function hitCol(col){
+  if(!G.running) return;
+  const hy=gc.height*HR; let best=null, bestD=9999;
+  for(const t of G.tiles){
+    if(t.col===col&&t.active){
+      const d=Math.abs((t.y+TH/2)-hy);
+      if(d<TH*0.85&&d<bestD){best=t;bestD=d;}
     }
   }
-  if (best) {
-    best.active = false;
-    G.score  += bestD < 25 ? 15 : bestD < 55 ? 12 : 8;
+  if(best){
+    best.active=false;
+    G.score+=bestD<25?15:bestD<55?12:8;
     G.combo++;
-    G.score  += Math.floor(G.combo / 5) * 3;
-    document.getElementById('score-val').textContent  = G.score;
-    document.getElementById('combo-val').textContent  = 'Combo: ' + G.combo + 'x';
+    G.score+=Math.floor(G.combo/5)*3;
+    document.getElementById('score-val').textContent=G.score;
+    document.getElementById('combo-val').textContent='Combo: '+G.combo+'x';
     spawnParts(col); showPerfect(G.combo);
-    if (G.combo % 15 === 0) {
-      G.speedMult = Math.min(2.5, +(G.speedMult + 0.1).toFixed(1));
-      document.getElementById('speed-val').textContent = '♩ ×' + G.speedMult.toFixed(1);
+    if(G.combo%15===0){
+      G.speedMult=Math.min(2.5,+(G.speedMult+0.1).toFixed(1));
+      document.getElementById('speed-val').textContent='♩ ×'+G.speedMult.toFixed(1);
     }
   } else {
-    G.combo = 0;
-    document.getElementById('combo-val').textContent = 'Combo: 0x';
-    flashMiss();
-    endGame(false);
+    G.combo=0; document.getElementById('combo-val').textContent='Combo: 0x';
+    flashMiss(); endGame(false);
   }
 }
 
-// ── Start / End ──
-function startGame(idx) {
-  if (G.src) { try { G.src.stop(); } catch(e){} G.src = null; }
-  const a = ac();
-  if (a.state === 'suspended') a.resume();
-
-  const song = loadedSongs[idx];
-  Object.assign(G, {
-    song, tiles:[], score:0, combo:0, speedMult:1,
-    beatIdx:0, lastSpawn:-1, running:true
-  });
-  parts.length = 0;
-
-  document.getElementById('score-val').textContent = '0';
-  document.getElementById('combo-val').textContent = 'Combo: 0x';
-  document.getElementById('speed-val').textContent = '♩ ×1.0';
-  document.getElementById('song-name').textContent = song.config.title + '  ·  ' + song.config.artist;
-  document.getElementById('prog-bar').style.width = '0%';
+function startGame(idx){
+  if(G.src){try{G.src.stop();}catch(e){} G.src=null;}
+  const ctx=getAC(); if(ctx.state==='suspended') ctx.resume();
+  const song=loadedSongs[idx];
+  Object.assign(G,{song,tiles:[],score:0,combo:0,speedMult:1,beatIdx:0,lastSpawn:-1,running:true});
+  parts.length=0;
+  document.getElementById('score-val').textContent='0';
+  document.getElementById('combo-val').textContent='Combo: 0x';
+  document.getElementById('speed-val').textContent='♩ ×1.0';
+  document.getElementById('song-name').textContent=song.config.title+'  ·  '+song.config.artist;
+  document.getElementById('prog-bar').style.width='0%';
   hideOverlay();
-
-  const src = a.createBufferSource();
-  src.buffer = song.buffer;
-  src.connect(a.destination);
-  src.start(0);
-  G.src = src; G.startT = a.currentTime;
-
-  src.onended = () => {
-    if (G.running) setTimeout(() => { if (G.running) endGame(true); }, 2000);
-  };
-
-  if (G.raf) cancelAnimationFrame(G.raf);
-  lastTs = performance.now();
-  G.raf = requestAnimationFrame(loop);
+  const src=ctx.createBufferSource();
+  src.buffer=song.buffer; src.connect(ctx.destination); src.start(0);
+  G.src=src; G.startT=ctx.currentTime;
+  src.onended=()=>{ if(G.running) setTimeout(()=>{ if(G.running) endGame(true); },2000); };
+  if(G.raf) cancelAnimationFrame(G.raf);
+  lastTs=performance.now(); G.raf=requestAnimationFrame(loop);
 }
 
-function endGame(win) {
-  G.running = false;
-  if (G.raf) cancelAnimationFrame(G.raf);
-  if (G.src) { try { G.src.stop(); } catch(e){} G.src = null; }
-
-  const name = G.song ? G.song.config.title : '—';
-  const body = win
-    ? `<div id="final-score">${G.score}</div><div id="final-label">${name}</div><div class="panel-sub" style="margin-top:10px">Combo max : ${G.combo}x ✨</div>`
-    : `<div id="final-score">${G.score}</div><div id="final-label">${name}</div><div class="panel-sub" style="margin-top:10px">Tu peux faire mieux ! 🌹</div>`;
-
-  const idx = loadedSongs.indexOf(G.song);
+function endGame(win){
+  G.running=false; if(G.raf) cancelAnimationFrame(G.raf);
+  if(G.src){try{G.src.stop();}catch(e){} G.src=null;}
+  const name=G.song?G.song.config.title:'—';
+  const idx=loadedSongs.indexOf(G.song);
+  const body=win
+    ?`<div id="final-score">${G.score}</div><div id="final-label">${name}</div><div class="panel-sub" style="margin-top:10px">Combo max : ${G.combo}x ✨</div>`
+    :`<div id="final-score">${G.score}</div><div id="final-label">${name}</div><div class="panel-sub" style="margin-top:10px">Tu peux faire mieux ! 🌹</div>`;
   showPanel(
-    win ? '🎉 Bravo Ibtissem! 💕' : '💔 Raté...',
+    win?'🎉 Bravo Ibtissem! 💕':'💔 Raté...',
     body,
-    [
-      { label: win ? 'Rejouer' : 'Réessayer', cb: () => startGame(idx) },
-      { label: 'Menu', cb: renderMenu },
-    ]
+    [{label:win?'Rejouer':'Réessayer',cb:()=>startGame(idx)},{label:'Menu',cb:renderMenu}]
   );
 }
 
-// ── UI helpers ──
-function flashMiss() {
-  const el = document.getElementById('miss-flash');
-  el.style.transition = 'none'; el.style.opacity = '1';
-  requestAnimationFrame(() => {
-    el.style.transition = 'opacity .35s'; el.style.opacity = '0';
-  });
+// ── UI ──
+function flashMiss(){
+  const el=document.getElementById('miss-flash');
+  el.style.opacity='1';
+  requestAnimationFrame(()=>{ el.style.transition='opacity .35s'; el.style.opacity='0'; setTimeout(()=>el.style.transition='',400); });
 }
-function showPerfect(combo) {
-  const el = document.getElementById('perfect-txt');
-  el.textContent = combo>=25?'🔥 INCROYABLE!':combo>=15?'✨ MAGNIFIQUE!':combo>=8?'💕 PARFAIT!':'❤️ PERFECT!';
-  el.style.transition = 'none'; el.style.opacity='1'; el.style.fontSize=clampFont();
-  requestAnimationFrame(() => {
-    el.style.transition = 'opacity .45s, font-size .45s';
-    el.style.opacity='0'; el.style.fontSize='22px';
-  });
+function showPerfect(c){
+  const el=document.getElementById('perfect-txt');
+  el.textContent=c>=25?'🔥 INCROYABLE!':c>=15?'✨ MAGNIFIQUE!':c>=8?'💕 PARFAIT!':'❤️ PERFECT!';
+  el.style.transition='none'; el.style.opacity='1';
+  el.style.fontSize=Math.min(30,Math.max(22,window.innerWidth*.07))+'px';
+  setTimeout(()=>{ el.style.transition='opacity .45s,font-size .45s'; el.style.opacity='0'; el.style.fontSize='22px'; },350);
 }
-function clampFont() { return Math.min(30, Math.max(22, window.innerWidth * 0.07)) + 'px'; }
+function showOverlay()  { document.getElementById('overlay').classList.remove('hidden'); }
+function hideOverlay()  { document.getElementById('overlay').classList.add('hidden'); }
+function showAnalyzing(t,p){ document.querySelector('#analyzing .an-title').textContent=t; document.getElementById('an-bar').style.width=p+'%'; document.getElementById('analyzing').classList.remove('hidden'); }
+function updAn(s,p)    { document.getElementById('an-sub').textContent=s; document.getElementById('an-bar').style.width=p+'%'; }
+function hideAnalyzing(){ document.getElementById('analyzing').classList.add('hidden'); }
 
-function showOverlay() { document.getElementById('overlay').classList.remove('hidden'); }
-function hideOverlay() { document.getElementById('overlay').classList.add('hidden'); }
-
-function showAnalyzing(title, pct) {
-  document.querySelector('#analyzing .an-title').textContent = title;
-  document.getElementById('an-bar').style.width = pct + '%';
-  document.getElementById('analyzing').classList.remove('hidden');
-}
-function updAn(sub, pct) {
-  document.getElementById('an-sub').textContent = sub;
-  document.getElementById('an-bar').style.width = pct + '%';
-}
-function hideAnalyzing() { document.getElementById('analyzing').classList.add('hidden'); }
-
-function showPanel(title, bodyHTML, btns) {
-  document.getElementById('p-title').textContent = title;
-  document.getElementById('p-sub').style.display = 'none';
-  const pb = document.getElementById('p-body');
-  pb.innerHTML = bodyHTML;
-  const row = document.createElement('div');
-  row.style.marginTop = '16px';
-  btns.forEach(b => {
-    const btn = document.createElement('button');
-    btn.className = 'btn'; btn.textContent = b.label;
-    btn.onclick = b.cb; row.appendChild(btn);
-  });
-  pb.appendChild(row);
-  showOverlay();
+function showPanel(title,bodyHTML,btns){
+  document.getElementById('p-title').textContent=title;
+  document.getElementById('p-sub').style.display='none';
+  const pb=document.getElementById('p-body'); pb.innerHTML=bodyHTML;
+  const row=document.createElement('div'); row.style.marginTop='16px';
+  btns.forEach(b=>{ const btn=document.createElement('button'); btn.className='btn'; btn.textContent=b.label; btn.onclick=b.cb; row.appendChild(btn); });
+  pb.appendChild(row); showOverlay();
 }
 
-// ── Menu ──
-function renderMenu() {
-  document.getElementById('p-title').textContent = '💕 Piano Tiles 💕';
-  document.getElementById('p-sub').style.display = '';
-  document.getElementById('p-sub').innerHTML = 'Pour toi, Ibtissem ✨<br>Choisis une musique !';
-  const pb = document.getElementById('p-body');
-  pb.innerHTML = '';
-
-  if (loadedSongs.length === 0) {
-    pb.innerHTML = '<div style="color:rgba(255,179,217,.45);font-style:italic;font-size:13px;padding:12px 0">Aucune chanson chargée.<br>Vérifie les noms des fichiers MP3.</div>';
+function renderMenu(){
+  document.getElementById('p-title').textContent='💕 Piano Tiles 💕';
+  document.getElementById('p-sub').style.display='';
+  document.getElementById('p-sub').innerHTML='Pour toi, Ibtissem ✨<br>Choisis une musique !';
+  const pb=document.getElementById('p-body'); pb.innerHTML='';
+  if(loadedSongs.length===0){
+    pb.innerHTML='<div style="color:rgba(255,179,217,.45);font-style:italic;font-size:13px;padding:12px 0">Aucune chanson chargée.<br>Vérifie les noms des fichiers MP3.</div>';
   } else {
-    loadedSongs.forEach((song, i) => {
-      const el = document.createElement('div');
-      el.className = 'song-item';
-      el.innerHTML = `
-        <div class="song-icon">${song.config.emoji}</div>
-        <div class="song-info">
-          <div class="song-title">${song.config.title}</div>
-          <div class="song-artist">${song.config.artist}</div>
-          <div class="song-bpm">${song.bpm} BPM · ${fmt(song.duration)}</div>
-        </div>`;
-      el.onclick = () => startGame(i);
+    loadedSongs.forEach((song,i)=>{
+      const el=document.createElement('div'); el.className='song-item';
+      el.innerHTML=`<div class="song-icon">${song.config.emoji}</div><div class="song-info"><div class="song-title">${song.config.title}</div><div class="song-artist">${song.config.artist}</div><div class="song-bpm">${song.bpm} BPM · ${fmt(song.duration)}</div></div>`;
+      // Touch natif iPhone
+      el.addEventListener('touchend', (e)=>{ e.preventDefault(); startGame(i); }, {passive:false});
+      el.addEventListener('click', ()=>startGame(i));
       pb.appendChild(el);
     });
   }
   showOverlay();
 }
 
-function fmt(s) {
-  return Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0');
-}
+function fmt(s){ return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0'); }
 
-// ── Controls ──
-document.querySelectorAll('.key').forEach(k => {
-  const col = +k.dataset.col;
-  const on  = e => { e.preventDefault(); k.classList.add('pressed'); if(AC&&AC.state==='suspended')AC.resume(); hitCol(col); };
-  const off = ()  => k.classList.remove('pressed');
-  k.addEventListener('mousedown',  on);
-  k.addEventListener('mouseup',    off);
-  k.addEventListener('mouseleave', off);
-  k.addEventListener('touchstart', on,  { passive:false });
-  k.addEventListener('touchend',   off);
-  k.addEventListener('touchcancel',off);
+// ── Touch iPhone — écoute sur toute la zone #keys ──
+const keysEl = document.getElementById('keys');
+
+keysEl.addEventListener('touchstart', function(e){
+  e.preventDefault(); e.stopPropagation();
+  const rect=keysEl.getBoundingClientRect();
+  for(let i=0;i<e.changedTouches.length;i++){
+    const t=e.changedTouches[i];
+    const col=Math.floor((t.clientX-rect.left)/(rect.width/COLS));
+    if(col>=0&&col<COLS){
+      hitCol(col);
+      const k=document.querySelector(`.key[data-col="${col}"]`);
+      if(k){ k.classList.add('pressed'); setTimeout(()=>k.classList.remove('pressed'),130); }
+    }
+  }
+}, {passive:false});
+
+keysEl.addEventListener('touchmove',   e=>e.preventDefault(), {passive:false});
+keysEl.addEventListener('touchend',    e=>e.preventDefault(), {passive:false});
+keysEl.addEventListener('touchcancel', e=>e.preventDefault(), {passive:false});
+
+// ── Mouse PC ──
+document.querySelectorAll('.key').forEach(k=>{
+  const col=+k.dataset.col;
+  k.addEventListener('mousedown', e=>{ e.preventDefault(); k.classList.add('pressed'); hitCol(col); });
+  k.addEventListener('mouseup',    ()=>k.classList.remove('pressed'));
+  k.addEventListener('mouseleave', ()=>k.classList.remove('pressed'));
 });
 
-document.addEventListener('keydown', e => {
-  if (e.repeat) return;
-  const m = {a:0,s:1,d:2,f:3};
-  if (m[e.key] === undefined) return;
-  if (AC && AC.state==='suspended') AC.resume();
-  const col = m[e.key]; hitCol(col);
-  const k = document.querySelector(`.key[data-col="${col}"]`);
-  if (k) { k.classList.add('pressed'); setTimeout(()=>k.classList.remove('pressed'), 110); }
+// ── Clavier PC ──
+document.addEventListener('keydown', e=>{
+  if(e.repeat) return;
+  const m={a:0,s:1,d:2,f:3};
+  if(m[e.key]!==undefined){
+    hitCol(m[e.key]);
+    const k=document.querySelector(`.key[data-col="${m[e.key]}"]`);
+    if(k){ k.classList.add('pressed'); setTimeout(()=>k.classList.remove('pressed'),110); }
+  }
+  if(e.key==='Escape'&&G.running) endGame(false);
 });
 
-document.addEventListener('keydown', e => {
-  if (e.key==='Escape' && G.running) endGame(false);
-});
+// Bloquer scroll/zoom sur tout le jeu
+document.getElementById('pt-root').addEventListener('touchmove', e=>e.preventDefault(), {passive:false});
 
-// Prevent scroll/zoom on touch
-document.addEventListener('touchmove', e => e.preventDefault(), { passive:false });
-
-// ── Floating hearts BG ──
-const bgC = document.getElementById('bg-canvas');
-const bgX = bgC.getContext('2d');
-const EM  = ['❤️','🌸','💕','💖','🌹','✨','💗','🥀','💝','🌷','💞','🦋','💓','🌺','💘'];
-
-function rzBg() { bgC.width=innerWidth; bgC.height=innerHeight; }
-rzBg(); window.addEventListener('resize', rzBg);
-
-const BH = Array.from({length:30}, ()=>({
-  x: Math.random()*100, y: Math.random()*110,
-  sz: 14+Math.random()*22, sp: .009+Math.random()*.022,
-  em: EM[Math.random()*EM.length|0],
-  al: .06+Math.random()*.12,
-  rot: Math.random()*Math.PI*2, rs: (Math.random()-.5)*.012
-}));
-
-function bgLoop() {
+// ── Background hearts ──
+const bgC=document.getElementById('bg-canvas'), bgX=bgC.getContext('2d');
+const EM=['❤️','🌸','💕','💖','🌹','✨','💗','🥀','💝','🌷','💞','🦋','💓','🌺','💘'];
+function rzBg(){ bgC.width=innerWidth; bgC.height=innerHeight; }
+rzBg(); window.addEventListener('resize',rzBg);
+const BH=Array.from({length:30},()=>({x:Math.random()*100,y:Math.random()*110,sz:14+Math.random()*22,sp:.009+Math.random()*.022,em:EM[Math.random()*EM.length|0],al:.06+Math.random()*.12,rot:Math.random()*Math.PI*2,rs:(Math.random()-.5)*.012}));
+function bgLoop(){
   bgX.clearRect(0,0,bgC.width,bgC.height);
-  for (const h of BH) {
+  for(const h of BH){
     h.y-=h.sp; h.rot+=h.rs;
     if(h.y<-5){h.y=105+Math.random()*10;h.x=Math.random()*100;h.em=EM[Math.random()*EM.length|0];}
-    bgX.save();
-    bgX.globalAlpha=h.al;
-    bgX.translate(h.x/100*bgC.width, h.y/100*bgC.height);
-    bgX.rotate(h.rot);
-    bgX.font=h.sz+'px serif';
-    bgX.textAlign='center'; bgX.textBaseline='middle';
-    bgX.fillText(h.em,0,0);
-    bgX.restore();
+    bgX.save(); bgX.globalAlpha=h.al;
+    bgX.translate(h.x/100*bgC.width,h.y/100*bgC.height); bgX.rotate(h.rot);
+    bgX.font=h.sz+'px serif'; bgX.textAlign='center'; bgX.textBaseline='middle';
+    bgX.fillText(h.em,0,0); bgX.restore();
   }
   requestAnimationFrame(bgLoop);
 }
 bgLoop();
-
-// ── INIT ──
-preloadAll();
 </script>
 </body>
 </html>
