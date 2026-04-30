@@ -347,13 +347,13 @@ body {
 // ══════════════════════════════════════════════════════
 const SONGS_CONFIG = [
   {
-    file:   './music/G-Eazy & Halsey - Him & I (Official Video).mp3',   // ← nom du fichier MP3
+    file:   './G-Eazy & Halsey - Him & I (Official Video).mp3',   // ← nom du fichier MP3
     title:  'Him & I',  // ← nom affiché
     artist: 'G-Eazy & Halsey',              // ← artiste affiché
     emoji:  '🌹',                   // ← emoji affiché
   },
   {
-    file:   './music/Bessan Ismail - Al Harbein (Official Music Video)  بيسان اسماعيل - الحربين.mp3',
+    file:   './Bessan Ismail - Al Harbein (Official Music Video)  بيسان اسماعيل - الحربين.mp3',
     title:  'Al Harbein',
     artist: 'Bessan Ismail',
     emoji:  '💕',
@@ -744,7 +744,7 @@ function flashMiss() {
 }
 function showPerfect(combo) {
   const el = document.getElementById('perfect-txt');
-  el.textContent = combo>=25?'🔥 INCROYABLE!':combo>=15?'✨ MAGNIFIQUE!':combo>=8?'💕 PARFAIT!':'❤️ PERFECT!';
+  el.textContent = combo>=100?'🔥 INCROYABLE!':combo>=55?'✨ MAGNIFIQUE!':combo>=38?'💕 PARFAIT!':'❤️ PERFECT!';
   el.style.transition = 'none'; el.style.opacity='1'; el.style.fontSize=clampFont();
   requestAnimationFrame(() => {
     el.style.transition = 'opacity .45s, font-size .45s';
@@ -787,7 +787,7 @@ function showPanel(title, bodyHTML, btns) {
 function renderMenu() {
   document.getElementById('p-title').textContent = '💕 Piano Tiles 💕';
   document.getElementById('p-sub').style.display = '';
-  document.getElementById('p-sub').innerHTML = 'Pour toi, Ibtissem ✨<br>Choisis une musique !';
+  document.getElementById('p-sub').innerHTML = 'Ton piano, Ibtichou ✨<br>Choisis une musique !';
   const pb = document.getElementById('p-body');
   pb.innerHTML = '';
 
