@@ -744,7 +744,7 @@ function flashMiss() {
 }
 function showPerfect(combo) {
   const el = document.getElementById('perfect-txt');
-  el.textContent = combo>=500?'😍 trop forte!':combo>=100?'🔥 INCROYABLE!':combo>=55?'✨ MAGNIFIQUE!':combo>=38?'💕 PARFAIT!':'❤️ PERFECT!';
+  el.textContent = combo>=400?'😍 trop forte!':combo>=100?'🔥 INCROYABLE!':combo>=55?'✨ MAGNIFIQUE!':combo>=38?'💕 PARFAIT!':'❤️ PERFECT!';
   el.style.transition = 'none'; el.style.opacity='1'; el.style.fontSize=clampFont();
   requestAnimationFrame(() => {
     el.style.transition = 'opacity .45s, font-size .45s';
