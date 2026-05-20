@@ -380,7 +380,7 @@ function ac() {
 async function detectBeats(buffer) {
   const sr   = buffer.sampleRate;
   const data = buffer.getChannelData(0);
-  const winMs   = 100;
+  const winMs   = 10;
   const frameSz = Math.floor(sr * winMs / 1000);
   const numFr   = Math.floor(data.length / frameSz);
   const energies = new Float32Array(numFr);
