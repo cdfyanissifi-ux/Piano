@@ -381,7 +381,7 @@ async function detectBeats(buffer) {
   const sr   = buffer.sampleRate;
   const data = buffer.getChannelData(0);
   const winMs   = 10;
-  const frameSz = Math.floor(sr * winMs / 1000);
+  const frameSz = Math.floor(sr * winMs / 500);
   const numFr   = Math.floor(data.length / frameSz);
   const energies = new Float32Array(numFr);
 
@@ -407,7 +407,7 @@ async function detectBeats(buffer) {
       for (let k = i-3; k <= i+3; k++) {
         if (k !== i && k >= 0 && k < numFr && energies[k] >= energies[i]) { peak = false; break; }
       }
-      if (peak) { beats.push(i * winMs / 1000); lastBeat = i; }
+      if (peak) { beats.push(i * winMs / 500); lastBeat = i; }
     }
   }
 
