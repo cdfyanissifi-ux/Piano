@@ -618,7 +618,7 @@ function loop(ts) {
   }
 
   // Move tiles
-  const spd = pps * dt / 1000;
+  const spd = pps * dt / 500;
   for (const t of G.tiles) if (t.active) t.y += spd;
 
   // Miss check (tile fell past bottom)
@@ -750,7 +750,7 @@ function flashMiss() {
 }
 function showPerfect(combo) {
   const el = document.getElementById('perfect-txt');
-  el.textContent = combo>=400?'😍 trop forte!':combo>=100?'🔥 INCROYABLE!':combo>=55?'✨ MAGNIFIQUE!':combo>=38?'💕 PARFAIT!':'❤️ PERFECT!';
+  el.textContent = combo>=150?'😍 trop forte!':combo>=90?'🔥 INCROYABLE!':combo>=55?'✨ MAGNIFIQUE!':combo>=38?'💕 PARFAIT!':'❤️ PERFECT!';
   el.style.transition = 'none'; el.style.opacity='1'; el.style.fontSize=clampFont();
   requestAnimationFrame(() => {
     el.style.transition = 'opacity .45s, font-size .45s';
